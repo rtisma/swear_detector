@@ -70,10 +70,10 @@ public class CachingLyricClient implements LyricClient {
           return;
         }
       } catch (Throwable e) {;
-        reseponseCache = new ResponseCache();
-        reseponseCache.setResponses(newArrayList());
       }
     }
+    reseponseCache = new ResponseCache();
+    reseponseCache.setResponses(newArrayList());
   }
 
   private static Path getCachePath(Path cacheDir) {
