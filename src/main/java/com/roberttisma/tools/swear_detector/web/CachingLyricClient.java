@@ -1,23 +1,22 @@
 package com.roberttisma.tools.swear_detector.web;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.roberttisma.tools.swear_detector.util.FileIO.setupDirectory;
+import static java.nio.file.Files.isRegularFile;
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roberttisma.tools.swear_detector.model.GetLyricsResponse;
 import com.roberttisma.tools.swear_detector.model.ResponseCache;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static com.roberttisma.tools.swear_detector.util.FileIO.setupDirectory;
-import static java.nio.file.Files.isRegularFile;
-import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @RequiredArgsConstructor(access = PRIVATE)
@@ -64,13 +63,13 @@ public class CachingLyricClient implements LyricClient {
   @SneakyThrows
   private void lazyLoadCache() {
     if (reseponseCache == null) {
-      try{
+      try {
         val cachePath = getCachePath(cacheDir);
         if (isRegularFile(cachePath)) {
           reseponseCache = OBJECT_MAPPER.readValue(cachePath.toFile(), ResponseCache.class);
           return;
         }
-      } catch (Throwable e){;
+      } catch (Throwable e) {;
         reseponseCache = new ResponseCache();
         reseponseCache.setResponses(newArrayList());
       }

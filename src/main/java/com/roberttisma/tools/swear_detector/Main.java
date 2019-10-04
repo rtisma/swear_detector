@@ -2,10 +2,9 @@ package com.roberttisma.tools.swear_detector;
 
 import com.roberttisma.tools.swear_detector.web.CachingLyricClient;
 import com.roberttisma.tools.swear_detector.web.UnirestLyricClient;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-
-import java.io.IOException;
 
 @Slf4j
 public class Main {

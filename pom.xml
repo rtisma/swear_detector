@@ -96,9 +96,6 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
-        <pluginManagement>
-            <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -153,8 +150,43 @@
                         </dependency>
                     </dependencies>
                 </plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>com.roberttisma.tools.swear_detector.Main</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+					</execution>
+					<execution>
+						<id>create-dist</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<attach>true</attach>
+							<descriptors>
+								<descriptor>src/main/assembly/bin.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
             </plugins>
-        </pluginManagement>
     </build>
     <properties>
         <!-- Project-->
@@ -185,6 +217,7 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <plugin.fmt.version>2.9</plugin.fmt.version>
         <maven.dependency.analyzer.version>1.11.1</maven.dependency.analyzer.version>
+		<plugin.maven.dependency.version>3.1.1</plugin.maven.dependency.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
 
     </properties>

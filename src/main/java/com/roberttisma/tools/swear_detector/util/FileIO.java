@@ -1,19 +1,18 @@
 package com.roberttisma.tools.swear_detector.util;
 
-import lombok.NonNull;
-import lombok.val;
+import static com.google.common.io.Files.toByteArray;
+import static java.lang.String.format;
+import static java.nio.file.Files.exists;
+import static java.nio.file.Files.isDirectory;
+import static java.nio.file.Files.isRegularFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.function.Supplier;
-
-import static com.google.common.io.Files.toByteArray;
-import static java.lang.String.format;
-import static java.nio.file.Files.exists;
-import static java.nio.file.Files.isDirectory;
-import static java.nio.file.Files.isRegularFile;
+import lombok.NonNull;
+import lombok.val;
 
 public class FileIO {
 
