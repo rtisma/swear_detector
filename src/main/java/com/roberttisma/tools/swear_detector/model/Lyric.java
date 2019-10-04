@@ -15,13 +15,14 @@ public class Lyric {
 
   @JsonProperty(value = "song-link")
   private String songLink;
+
   private String artist;
 
   @JsonProperty(value = "artist-link")
   private String artistLink;
+
   private String album;
 
   @JsonProperty(value = "album-link")
   private String albumLink;
-
 }

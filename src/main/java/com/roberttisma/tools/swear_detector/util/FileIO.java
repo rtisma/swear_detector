@@ -37,7 +37,7 @@ public class FileIO {
   }
 
   public static void setupDirectory(@NonNull Path dirpath) throws IOException {
-    if (isDirectory(dirpath)){
+    if (!isDirectory(dirpath)) {
       Files.createDirectories(dirpath);
     }
   }

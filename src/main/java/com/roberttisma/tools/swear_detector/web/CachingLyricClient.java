@@ -21,70 +21,68 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @RequiredArgsConstructor(access = PRIVATE)
-public class CachingLyricClient implements LyricClient{
+public class CachingLyricClient implements LyricClient {
 
-  /**
-   * Constants
-   */
+  /** Constants */
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
   private static final String CACHE_FILE = "lyrics-cache.json";
 
-  /**
-   * Config
-   */
+  /** Config */
   @NonNull private final Path cacheDir;
+
   @NonNull private final LyricClient internalLyricClient;
 
-  /**
-   * State
-   */
+  /** State */
   private ResponseCache reseponseCache;
 
   @Override
   public GetLyricsResponse get(@NonNull String term) {
     lazyLoadCache();
     return findByTerm(term)
-        .orElseGet(() -> {
-          val a = internalLyricClient.get(term);
-          reseponseCache.getResponses().add(a);
-          persistCache();
-          return a;
-        });
+        .orElseGet(
+            () -> {
+              val a = internalLyricClient.get(term);
+              reseponseCache.getResponses().add(a);
+              persistCache();
+              return a;
+            });
   }
 
-  private Optional<GetLyricsResponse> findByTerm(String term){
-    return reseponseCache.getResponses().stream()
-        .filter(x -> x.getTerm().equals(term))
-        .findFirst();
+  private Optional<GetLyricsResponse> findByTerm(String term) {
+    return reseponseCache.getResponses().stream().filter(x -> x.getTerm().equals(term)).findFirst();
   }
 
   @SneakyThrows
-  private void persistCache(){
-    if (reseponseCache != null){
+  private void persistCache() {
+    if (reseponseCache != null) {
       val cachePath = getCachePath(cacheDir);
-      OBJECT_MAPPER.writeValue(cachePath.toFile(), reseponseCache);
+      OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValue(cachePath.toFile(), reseponseCache);
     }
   }
 
   @SneakyThrows
-  private void lazyLoadCache(){
-    if (reseponseCache==null){
-      val cachePath = getCachePath(cacheDir);
-      if (isRegularFile(cachePath)){
-        reseponseCache = OBJECT_MAPPER.readValue(cachePath.toFile(), ResponseCache.class);
-      } else {
+  private void lazyLoadCache() {
+    if (reseponseCache == null) {
+      try{
+        val cachePath = getCachePath(cacheDir);
+        if (isRegularFile(cachePath)) {
+          reseponseCache = OBJECT_MAPPER.readValue(cachePath.toFile(), ResponseCache.class);
+          return;
+        }
+      } catch (Throwable e){;
         reseponseCache = new ResponseCache();
         reseponseCache.setResponses(newArrayList());
       }
     }
   }
 
-  private static Path getCachePath(Path cacheDir){
+  private static Path getCachePath(Path cacheDir) {
     return cacheDir.resolve(CACHE_FILE);
   }
 
-  public static CachingLyricClient createFileCachingLyricClient(@NonNull String cacheDirname,
-      @NonNull LyricClient internalLyricClient) throws IOException {
+  public static CachingLyricClient createFileCachingLyricClient(
+      @NonNull String cacheDirname, @NonNull LyricClient internalLyricClient) throws IOException {
     val cacheDir = Paths.get(cacheDirname);
     log.debug("Setting up directory: {}", cacheDir.toAbsolutePath().toString());
     setupDirectory(cacheDir);

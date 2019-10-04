@@ -6,5 +6,5 @@ import lombok.SneakyThrows;
 
 public interface LyricClient {
 
-  @SneakyThrows GetLyricsResponse get(@NonNull String term);
+  GetLyricsResponse get(String term);
 }
