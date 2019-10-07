@@ -4,11 +4,15 @@ import static com.roberttisma.tools.swear_detector.web.CachingLyricClient.create
 import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.mockito.Mockito.when;
 
+import com.roberttisma.tools.swear_detector.cli.SongSearchCommand;
 import com.roberttisma.tools.swear_detector.model.GetLyricsResponse;
 import com.roberttisma.tools.swear_detector.model.Lyric;
 import com.roberttisma.tools.swear_detector.web.LyricClient;
+import java.nio.file.Files;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -18,6 +22,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import picocli.CommandLine;
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.class)
@@ -35,10 +40,13 @@ public class LyricTest {
   @SneakyThrows
   public void test() {
 
+    val dfile = tmp.newFile();
     when(lyricClient.get(TERM1)).thenReturn(RESPONSE1);
     when(lyricClient.get(TERM2)).thenReturn(RESPONSE2);
+    val d = Stream.of("the", "him").collect(Collectors.joining("\n"));
+    Files.write(dfile.toPath(), d.getBytes());
     val client = createFileCachingLyricClient("./robi", lyricClient);
-    val d = client.get(TERM1);
+    new CommandLine(new SongSearchCommand()).execute("-f", dfile.getAbsolutePath(), "-t", TERM1);
     log.info("Sdfsdf");
   }
 

@@ -52,4 +52,4 @@ program_home=$current_dir/`dirname $fn`/../
          #"$program_home/conf/application.yml" \
 java --illegal-access=deny \
          -jar $program_home/lib/swear-detector.jar \
-         $@
+         "$@"

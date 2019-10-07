@@ -1,20 +1,14 @@
 package com.roberttisma.tools.swear_detector;
 
-import com.roberttisma.tools.swear_detector.web.CachingLyricClient;
-import com.roberttisma.tools.swear_detector.web.UnirestLyricClient;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-
+import com.roberttisma.tools.swear_detector.cli.SongSearchCommand;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import picocli.CommandLine;
 
 @Slf4j
 public class Main {
 
   public static void main(String[] args) throws IOException {
-    val internalClient = UnirestLyricClient.builder().tokenId("something").uid(1222).build();
-    val client = CachingLyricClient.createFileCachingLyricClient("./", internalClient);
-    val r1 = client.get("Eazy");
-    val r2 = client.get("Eazy");
-    log.info("WORKING!!!");
+    new CommandLine(new SongSearchCommand()).execute(args);
   }
 }
